@@ -261,15 +261,7 @@ body{font-family:'DM Sans',sans-serif;color:#1a2e4a;display:flex;flex-direction:
   <div class="view" id="courseView">
     <div class="sbox">
       <div class="stitle">🔍 Course Database</div>
-      <div class="ssub">Search 42,000+ courses via GolfAPI.io (free key at golfapi.io).</div>
-      <div class="apibox" id="apibox">
-        <div class="apilbl">Get a free key at <strong style="color:var(--goldl)">golfapi.io</strong> — contact them by email, they respond quickly. Your key is saved on your device.</div>
-        <div class="apirow">
-          <input type="password" class="apiinput" id="apiKeyInput" placeholder="Paste your API key…">
-          <button class="apisave" id="apiSaveBtn">Save</button>
-        </div>
-        <div id="apiSt"></div>
-      </div>
+      <div class="ssub">Search 17,000+ courses worldwide. No signup, no key needed — completely free.</div>
       <div class="srow">
         <input type="text" class="sinput" id="sInput" placeholder="Course name, city, or country…">
         <button class="sbtn" id="sBtn">Search</button>
@@ -443,9 +435,8 @@ function initApiKey(){
   });
 }
 
-// ════ SEARCH — golfapi.io ════
-// Endpoint: GET https://api.golfapi.io/api/v2.0/clubs?name=X  (Bearer token)
-// Also supports: city=X, country=X
+// ════ SEARCH — OpenGolfAPI (no key needed) ════
+// https://api.opengolfapi.org/v1/courses/search?q=pebble+beach
 function setSt(msg,col){ var e=document.getElementById('sst'); e.textContent=msg; e.style.color=col||'rgba(255,255,255,.5)'; }
 
 function initSearch(){
@@ -455,148 +446,105 @@ function initSearch(){
 
 async function doSearch(){
   var q=(document.getElementById('sInput').value||'').trim(); if(!q)return;
-  var key=getKey();
-  if(!key){ setSt('⚠️ Please save your API key first','#f39c12'); return; }
   var btn=document.getElementById('sBtn'); btn.disabled=true; btn.textContent='…';
   setSt('Searching…','rgba(255,255,255,.6)');
   document.getElementById('rlist').innerHTML='';
-
-  // Try multiple param combos: name, city, country
-  var results=[];
-  var tried=false;
-  var bases=[
-    'https://api.golfapi.io/api/v2.0/clubs?name='+encodeURIComponent(q),
-    'https://api.golfapi.io/api/v2.0/clubs?city='+encodeURIComponent(q),
-    'https://api.golfapi.io/api/v2.0/clubs?country='+encodeURIComponent(q)
-  ];
-  for(var i=0;i<bases.length;i++){
-    try{
-      var res=await fetch(bases[i],{headers:{'Authorization':'Bearer '+key,'Accept':'application/json'}});
-      if(res.ok){
-        var data=await res.json();
-        var clubs=data.clubs||data.data||data.results||data||[];
-        if(Array.isArray(clubs)&&clubs.length){ results=clubs; tried=true; break; }
-      }
-    }catch(e){}
-  }
-
-  if(!tried||!results.length){
-    // Fallback: try golfcourseapi.com format as well
-    try{
-      var res2=await fetch('https://api.golfcourseapi.com/v1/search?search_query='+encodeURIComponent(q),
-        {headers:{'Authorization':'Key '+key}});
-      if(res2.ok){
-        var d2=await res2.json();
-        var c2=d2.clubs||[];
-        if(c2.length){ results=c2; tried=true; }
-      }
-    }catch(e){}
-  }
-
-  if(results.length){
-    setSt(results.length+' found — tap to load','#2ecc71');
-    renderResults(results);
-  } else {
-    setSt('No results. Try a course name instead of a city, or check your API key.','rgba(255,255,255,.55)');
+  try{
+    var url='https://api.opengolfapi.org/v1/courses/search?q='+encodeURIComponent(q)+'&limit=15';
+    var res=await fetch(url,{headers:{'Accept':'application/json'}});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    var data=await res.json();
+    // response is array or {courses:[...]} or {results:[...]}
+    var courses=Array.isArray(data)?data:(data.courses||data.results||data.data||[]);
+    if(courses.length){
+      setSt(courses.length+' found — tap to load','#2ecc71');
+      renderResults(courses);
+    } else {
+      setSt('No results. Try the full course name (e.g. "Doral Golf" not just "Doral").','rgba(255,255,255,.55)');
+    }
+  }catch(e){
+    setSt('❌ Search failed: '+e.message,'#e74c3c');
   }
   btn.disabled=false; btn.textContent='Search';
 }
 
-function renderResults(clubs){
+function renderResults(courses){
   var list=document.getElementById('rlist'); list.innerHTML='';
-  var shown=clubs.slice(0,15);
-  shown.forEach(function(club){
+  courses.slice(0,15).forEach(function(course){
     var d=document.createElement('div'); d.className='rcard';
-    var name=club.club_name||club.name||club.ClubName||'Unknown Course';
-    var city=club.city||club.City||'';
-    var state=club.state||club.State||'';
-    var country=club.country||club.Country||'';
+    // OpenGolfAPI fields: name, city, state, country, par, holes, id
+    var name=course.name||course.club_name||course.ClubName||'Unknown Course';
+    var city=course.city||course.City||'';
+    var state=course.state||course.State||'';
+    var country=course.country||course.Country||'';
     var loc=[city,state,country].filter(Boolean).join(', ');
-    var courses=club.courses||[];
-    var hstr=courses.length?(courses.map(function(c){return(c.number_of_holes||c.numberOfHoles||18)+'H';}).join('/')):'18H';
-    d.innerHTML='<div style="flex:1"><div class="rname">'+esc(name)+'</div>'+(loc?'<div class="rloc">'+esc(loc)+'</div>':'')+'</div>'
-      +'<div class="rmeta">'+hstr+'</div>'
+    var holes=course.holes||course.number_of_holes||18;
+    var par=course.par?(' · Par '+course.par):'';
+    d.innerHTML='<div style="flex:1"><div class="rname">'+esc(name)+'</div>'
+      +(loc?'<div class="rloc">'+esc(loc)+'</div>':'')+'</div>'
+      +'<div class="rmeta">'+holes+'H'+par+'</div>'
       +'<div style="color:rgba(255,255,255,.3);font-size:16px">›</div>';
-    d.addEventListener('click',function(){ loadCourse(club,d); });
+    d.addEventListener('click',function(){ loadCourse(course,d); });
     list.appendChild(d);
   });
 }
 function esc(s){ var d=document.createElement('div');d.textContent=s;return d.innerHTML; }
 
-async function loadCourse(club,card){
-  var key=getKey();
+async function loadCourse(course,card){
   card.style.opacity='.5'; setSt('Loading course data…','rgba(255,255,255,.6)');
-  // Try to fetch full course details
-  var courses=club.courses||[];
+  var id=course.id||course.course_id||course.courseId;
   var loaded=false;
-  if(courses.length){
-    var cid=courses[0].id||courses[0].courseId||courses[0].course_id;
-    if(cid){
-      // try golfapi.io
-      try{
-        var r=await fetch('https://api.golfapi.io/api/v2.0/courses/'+cid,
-          {headers:{'Authorization':'Bearer '+key,'Accept':'application/json'}});
-        if(r.ok){ var data=await r.json(); applyFull(club,data.course||data); loaded=true; }
-      }catch(e){}
-      // try golfcourseapi.com
-      if(!loaded){
-        try{
-          var r2=await fetch('https://api.golfcourseapi.com/v1/courses/'+cid,
-            {headers:{'Authorization':'Key '+key}});
-          if(r2.ok){ var d2=await r2.json(); applyFull(club,d2.course||d2); loaded=true; }
-        }catch(e){}
+  if(id){
+    try{
+      var r=await fetch('https://api.opengolfapi.org/v1/courses/'+id,{headers:{'Accept':'application/json'}});
+      if(r.ok){
+        var detail=await r.json();
+        applyOpenGolf(detail); loaded=true;
       }
-    }
+    }catch(e){}
   }
-  if(!loaded) applyBasic(club);
-  setSt(loaded?'✅ Loaded full course data!':'⚠️ Loaded basic data.', loaded?'#2ecc71':'#f39c12');
+  // If no detail or no id, apply what we already have from search result
+  if(!loaded) applyOpenGolfBasic(course);
+  setSt(loaded?'✅ Course loaded!':'✅ Basic data loaded.','#2ecc71');
   card.style.opacity='1';
 }
 
-function mapTee(raw){
-  var r=(raw||'').toLowerCase();
-  if(r.includes('black')||r.includes('champion')||r.includes('tips'))return'Black';
-  if(r.includes('gold')||r.includes('senior')||r.includes('master'))return'Gold';
-  if(r.includes('blue')||r.includes('back')||r.includes('men'))return'Blue';
-  if(r.includes('red')||r.includes('forward')||r.includes('ladies')||r.includes('women'))return'Red';
-  return'White';
-}
-
-function applyFull(club,course){
-  S.course=club.club_name||club.name||'Golf Course';
-  S.holes=course.number_of_holes||course.numberOfHoles||18;
+function applyOpenGolf(course){
+  // OpenGolfAPI detail: {name, city, state, par, holes, scorecard:[{hole,par},...]}
+  S.course = course.name||'Golf Course';
+  S.holes  = course.holes||course.number_of_holes||18;
   document.getElementById('numHoles').value=S.holes;
   S.hd=mkH(S.holes); S.ratings={};
-  var tees=course.tees||course.teeSets||[];
-  tees.forEach(function(tee){
-    var tn=mapTee(tee.tee_name||tee.teeName||tee.name||'');
-    if(tee.course_rating||tee.courseRating||tee.slope_rating||tee.slopeRating){
-      S.ratings[tn]={
-        cr:tee.course_rating||tee.courseRating||null,
-        sr:tee.slope_rating||tee.slopeRating||null,
-        ty:tee.total_yards||tee.totalYards||tee.total_length||null
-      };
-    }
-    var holes=tee.holes||[];
-    holes.forEach(function(h,i){
-      if(i>=S.hd.length)return;
-      var p=h.par||h.Par; if(p) S.hd[i].par=parseInt(p)||S.hd[i].par;
-      var si=h.handicap||h.strokeIndex||h.stroke_index||h.Handicap;
-      if(si) S.hd[i].si=parseInt(si)||S.hd[i].si;
-      var y=h.length||h.yards||h.distance||h.Length||h.Yards;
-      if(y&&TEES.indexOf(tn)>=0) S.hd[i].yards[tn]=parseInt(y)||S.hd[i].yards[tn];
+  // Apply scorecard pars if available
+  var sc=course.scorecard||course.holes_data||[];
+  if(Array.isArray(sc)){
+    sc.forEach(function(h){
+      var idx=(h.hole||h.number||1)-1;
+      if(idx>=0&&idx<S.hd.length){
+        if(h.par) S.hd[idx].par=parseInt(h.par)||S.hd[idx].par;
+        if(h.handicap||h.si||h.stroke_index) S.hd[idx].si=parseInt(h.handicap||h.si||h.stroke_index)||S.hd[idx].si;
+        // yardages
+        if(h.yards||h.yardage||h.length) S.hd[idx].yards.White=parseInt(h.yards||h.yardage||h.length)||S.hd[idx].yards.White;
+        if(h.blue_yards||h.blue) S.hd[idx].yards.Blue=parseInt(h.blue_yards||h.blue);
+        if(h.red_yards||h.red)   S.hd[idx].yards.Red=parseInt(h.red_yards||h.red);
+        if(h.gold_yards||h.gold) S.hd[idx].yards.Gold=parseInt(h.gold_yards||h.gold);
+        if(h.black_yards||h.black) S.hd[idx].yards.Black=parseInt(h.black_yards||h.black);
+      }
     });
-  });
-  finishLoad(club);
+  }
+  finishLoad(course);
 }
 
-function applyBasic(club){
-  S.course=club.club_name||club.name||'Golf Course';
-  S.holes=parseInt(club.number_of_holes||club.numberOfHoles)||18;
+function applyOpenGolfBasic(course){
+  S.course=course.name||'Golf Course';
+  S.holes=course.holes||course.number_of_holes||18;
   document.getElementById('numHoles').value=S.holes;
   if(S.hd.length!==S.holes) S.hd=mkH(S.holes);
-  finishLoad(club);
+  // use top-level par if available
+  finishLoad(course);
 }
+
+// finishLoad shared by both apply functions
 
 function finishLoad(club){
   var city=club.city||club.City||'';
