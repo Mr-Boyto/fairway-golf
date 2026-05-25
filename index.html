@@ -4,226 +4,264 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https:;">
 <title>Fairway Golf</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --green:#1a6b3c;--greenl:#228b4e;--gpale:#e8f5ee;
-  --gold:#c9922a;--goldl:#f0b94a;
-  --sky:#1a2e4a;--skyl:#243d5c;
-  --red:#c0392b;--sh:0 4px 20px rgba(0,0,0,.12);
-}
+/* RESET & BASE */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-html,body{height:100%;overflow:hidden;background:var(--sky)}
+html,body{height:100%;overflow:hidden;background:#1a2e4a}
 body{font-family:'DM Sans',sans-serif;color:#1a2e4a;display:flex;flex-direction:column}
 
+/* DESIGN TOKENS */
+:root{
+–g:#1a6b3c;–gl:#228b4e;–gp:#e8f5ee;
+–go:#c9922a;–gol:#f0b94a;
+–sk:#1a2e4a;–skl:#243d5c;
+–re:#c0392b;
+–sh:0 3px 16px rgba(0,0,0,.11);
+}
+
 /* HEADER */
-#hdr{background:var(–sky);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.3)}
-.logo{font-family:‘Bebas Neue’,sans-serif;font-size:24px;letter-spacing:2px;color:var(–goldl)}
+#hdr{background:var(–sk);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+#logo{font-family:‘Bebas Neue’,sans-serif;font-size:24px;letter-spacing:2px;color:var(–gol)}
 #hdrCourse{font-size:13px;font-weight:600;color:#fff;margin-left:8px}
 #hdrDate{font-size:10px;color:rgba(255,255,255,.45);margin-left:8px}
-#btnNew{background:none;border:1.5px solid rgba(255,255,255,.3);color:#fff;padding:5px 11px;border-radius:8px;font-size:12px;font-weight:600;font-family:‘DM Sans’,sans-serif;cursor:pointer}
+#btnNew{background:transparent;border:1.5px solid rgba(255,255,255,.35);color:#fff;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;font-family:‘DM Sans’,sans-serif;cursor:pointer}
 
 /* TABS */
-#tabs{display:flex;background:rgba(0,0,0,.25);flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07)}
-.tab{flex:1;padding:9px 2px;text-align:center;color:rgba(255,255,255,.38);font-size:10px;font-weight:700;border:none;background:none;font-family:‘DM Sans’,sans-serif;cursor:pointer;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:.3px;transition:color .15s}
-.tab.on{color:var(–goldl);border-bottom-color:var(–goldl);background:rgba(255,255,255,.04)}
+#tabs{display:flex;background:rgba(0,0,0,.22);flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07)}
+.tab{flex:1;padding:9px 2px;text-align:center;color:rgba(255,255,255,.38);font-size:10px;font-weight:700;border:none;background:none;font-family:‘DM Sans’,sans-serif;cursor:pointer;border-bottom:3px solid transparent;text-transform:uppercase;letter-spacing:.3px}
+.tab.on{color:var(–gol);border-bottom-color:var(–gol);background:rgba(255,255,255,.04)}
 
-/* VIEWS */
+/* APP SHELL */
 #app{flex:1;overflow:hidden;position:relative}
 .view{position:absolute;inset:0;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:11px;visibility:hidden;pointer-events:none;-webkit-overflow-scrolling:touch}
 .view.on{visibility:visible;pointer-events:auto}
+#playView{padding:0;overflow:hidden}
 
 /* CARD */
 .card{background:#fff;border-radius:14px;padding:13px;box-shadow:var(–sh)}
-.ct{font-family:‘Bebas Neue’,sans-serif;font-size:17px;letter-spacing:1px;color:var(–green);margin-bottom:10px}
+.ct{font-family:‘Bebas Neue’,sans-serif;font-size:17px;letter-spacing:1px;color:var(–g);margin-bottom:10px}
 
-/* FORM */
+/* FORM FIELDS */
 .frow{display:flex;gap:8px;flex-wrap:wrap}
-.f{flex:1;min-width:110px}
-.f label{display:block;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
-.f input,.f select{width:100%;padding:9px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:‘DM Sans’,sans-serif;background:#fafafa;-webkit-appearance:none}
-.f input:focus,.f select:focus{outline:none;border-color:var(–green);background:#fff}
+.fl{flex:1;min-width:110px}
+.fl label{display:block;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.fl select,.fl input{width:100%;padding:9px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:‘DM Sans’,sans-serif;background:#fafafa;-webkit-appearance:none;appearance:none}
+.fl select:focus,.fl input:focus{outline:none;border-color:var(–g);background:#fff}
 
-/* PLAYERS — 5 players in a responsive grid */
+/* TEE BUTTONS */
+.teelbl{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;margin-top:10px}
+.teebar{display:flex;gap:7px;flex-wrap:wrap}
+.tb{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:‘DM Sans’,sans-serif;border:2.5px solid transparent;color:#fff;transition:transform .12s}
+.tb-w{background:#757575;border-color:#757575}
+.tb-b{background:#1565c0;border-color:#1565c0}
+.tb-r{background:#c62828;border-color:#c62828}
+.tb-g{background:#f57f17;border-color:#f57f17;color:#333}
+.tb-k{background:#212121;border-color:#212121}
+.tb.on{box-shadow:0 0 0 3px #fff,0 0 0 5px var(–gol);transform:scale(1.08)}
+
+/* PLAYERS */
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ps{background:var(–gpale);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;border:2px solid transparent}
-.ps.on{border-color:var(–green)}
-.pslbl{font-size:10px;font-weight:700;color:var(–green);text-transform:uppercase}
-.ps input{border:1.5px solid #d0e8d8;border-radius:6px;padding:7px 9px;font-size:13px;background:#fff;font-family:‘DM Sans’,sans-serif;width:100%}
+.ps{background:var(–gp);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;border:2px solid transparent}
+.ps.on{border-color:var(–g)}
+.pslbl{font-size:10px;font-weight:700;color:var(–g);text-transform:uppercase}
+.ps input{border:1.5px solid #c8e6c9;border-radius:6px;padding:7px 9px;font-size:13px;background:#fff;font-family:‘DM Sans’,sans-serif;width:100%}
+.ps input:focus{outline:none;border-color:var(–g)}
 
-/* TEE BUTTONS — use distinct colors matching real tee colors */
-.teebar{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.teebtn{padding:6px 13px;border-radius:20px;border:2px solid transparent;font-size:12px;font-weight:700;cursor:pointer;font-family:‘DM Sans’,sans-serif;transition:all .15s;color:#fff}
-.teebtn[data-tee=“White”]{background:#9e9e9e;border-color:#9e9e9e}
-.teebtn[data-tee=“Blue”] {background:#1565c0;border-color:#1565c0}
-.teebtn[data-tee=“Red”]  {background:#c62828;border-color:#c62828}
-.teebtn[data-tee=“Gold”] {background:#f9a825;border-color:#f9a825;color:#333}
-.teebtn[data-tee=“Black”]{background:#212121;border-color:#212121}
-.teebtn.on{box-shadow:0 0 0 3px rgba(255,255,255,.6),0 0 0 5px var(–goldl);transform:scale(1.07)}
+/* START BTN */
+.startbtn{padding:14px;background:var(–g);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer;width:100%}
+.startbtn:active{background:var(–gl)}
 
-.startbtn{padding:14px;background:var(–green);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer;width:100%}
-.startbtn:active{background:var(–greenl)}
-
-/* SEARCH BOX */
-.sbox{background:linear-gradient(135deg,var(–sky),var(–skyl));border-radius:14px;padding:14px}
-.stitle{font-family:‘Bebas Neue’,sans-serif;font-size:18px;letter-spacing:1px;color:var(–goldl);margin-bottom:3px}
+/* SEARCH */
+.sbox{background:linear-gradient(135deg,#1a2e4a,#243d5c);border-radius:14px;padding:14px}
+.stitle{font-family:‘Bebas Neue’,sans-serif;font-size:18px;letter-spacing:1px;color:var(–gol);margin-bottom:3px}
 .ssub{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:10px;line-height:1.5}
-.apibox{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.14);border-radius:10px;padding:12px;margin-bottom:10px}
-.apilbl{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:6px;line-height:1.5}
-.apirow{display:flex;gap:8px}
-.apiinput{flex:1;padding:8px 10px;border:1.5px solid rgba(255,255,255,.2);border-radius:8px;font-size:13px;font-family:‘DM Sans’,sans-serif;background:rgba(255,255,255,.08);color:#fff}
-.apiinput::placeholder{color:rgba(255,255,255,.3)}
-.apiinput:focus{outline:none;border-color:var(–goldl)}
-.apisave{padding:8px 14px;background:var(–green);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer}
-#apiSt{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;min-height:14px}
 .srow{display:flex;gap:8px}
-.sinput{flex:1;padding:10px 12px;border:1.5px solid rgba(255,255,255,.2);border-radius:8px;font-size:14px;font-family:‘DM Sans’,sans-serif;background:rgba(255,255,255,.1);color:#fff}
+.sinput{flex:1;padding:10px 12px;border:1.5px solid rgba(255,255,255,.22);border-radius:8px;font-size:14px;font-family:‘DM Sans’,sans-serif;background:rgba(255,255,255,.1);color:#fff}
 .sinput::placeholder{color:rgba(255,255,255,.3)}
-.sinput:focus{outline:none;border-color:var(–goldl)}
-.sbtn{padding:10px 16px;background:var(–gold);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer}
+.sinput:focus{outline:none;border-color:var(–gol)}
+.sbtn{padding:10px 16px;background:var(–go);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer}
 .sbtn:disabled{background:#555;cursor:not-allowed}
-#sst{margin-top:8px;font-size:12px;color:rgba(255,255,255,.5);min-height:16px}
+#sst{margin-top:8px;font-size:12px;min-height:16px;color:rgba(255,255,255,.5)}
+.sst-ok{color:#2ecc71 !important}
+.sst-warn{color:#f39c12 !important}
+.sst-err{color:#e74c3c !important}
 #rlist{display:flex;flex-direction:column;gap:7px;margin-top:10px}
-.rcard{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.12);border-radius:10px;padding:11px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rcard{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.13);border-radius:10px;padding:11px 13px;cursor:pointer;display:flex;align-items:center;gap:8px}
 .rcard:active{background:rgba(255,255,255,.2)}
 .rname{font-size:14px;font-weight:700;color:#fff}
 .rloc{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
-.rmeta{font-size:11px;color:var(–goldl);white-space:nowrap}
+.rmeta{font-size:11px;color:var(–gol);white-space:nowrap;margin-left:auto}
+.rarrow{color:rgba(255,255,255,.25);font-size:16px;flex-shrink:0}
 
-/* LOADED */
-#lbanner{background:var(–gpale);border:1.5px solid var(–green);border-radius:10px;padding:10px 13px;display:none;align-items:center;justify-content:space-between;gap:8px}
+/* LOADED BANNER */
+#lbanner{background:var(–gp);border:1.5px solid var(–g);border-radius:10px;padding:10px 13px;display:none;align-items:center;justify-content:space-between;gap:8px}
 #lbanner.on{display:flex}
-.lname{font-size:13px;font-weight:700;color:var(–green)}
-.lmeta{font-size:11px;color:#666;margin-top:2px}
-.lbtn{padding:6px 12px;background:var(–green);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer}
+.lname{font-size:13px;font-weight:700;color:var(–g)}
+.lmeta{font-size:11px;color:#555;margin-top:2px}
+.lbtn{padding:6px 12px;background:var(–g);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer}
 
 /* COURSE TABLE */
 .twrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .citbl{width:100%;border-collapse:collapse;font-size:12px;min-width:600px}
-.citbl th{background:var(–sky);color:rgba(255,255,255,.65);padding:7px 5px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase}
-.citbl th:first-child{text-align:left;padding-left:10px;min-width:46px}
+.citbl th{background:var(–sk);color:rgba(255,255,255,.65);padding:7px 5px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase}
+.citbl th.thh{text-align:left;padding-left:10px}
 .citbl td{padding:5px 4px;text-align:center;border-bottom:1px solid #f0f0f0;vertical-align:middle}
-.citbl td:first-child{font-weight:700;font-size:11px;text-align:left;padding-left:10px;color:var(–green);background:#fafff9}
+.citbl td.tdhh{font-weight:700;font-size:11px;text-align:left;padding-left:10px;color:var(–g);background:#fafff9}
 .citbl tr:nth-child(even) td{background:#fafafa}
-.citbl tr:nth-child(even) td:first-child{background:#f5fef7}
-.citbl tr.trow td{background:var(–gpale)!important;font-weight:700;color:var(–sky);border-bottom:none}
+.citbl tr:nth-child(even) td.tdhh{background:#f5fef7}
+.citbl tr.trow td{background:var(–gp) !important;font-weight:700;color:var(–sk);border-bottom:none}
+.tbl-w{background:#616161 !important}
+.tbl-b{background:#1565c0 !important}
+.tbl-r{background:#c62828 !important}
+.tbl-g{background:#f57f17 !important;color:#333 !important}
+.tbl-k{background:#111 !important}
 .citbl input{width:48px;padding:4px 2px;text-align:center;border:1.5px solid #ddd;border-radius:5px;font-size:12px;font-weight:600;font-family:‘DM Sans’,sans-serif;background:#fff}
-.citbl input:focus{outline:none;border-color:var(–green)}
-/* tee column header colors */
-.th-w{background:#757575!important}.th-b{background:#1565c0!important}
-.th-r{background:#c62828!important}.th-g{background:#f57f17!important;color:#333!important}.th-k{background:#111!important}
-/* active tee column highlight */
-.citbl input.atee{border-color:var(–gold);background:#fffbea}
+.citbl input.atee{border-color:var(–go);background:#fffbea}
+.citbl input:focus{outline:none;border-color:var(–g)}
 
 /* RATINGS */
 .rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.ritem{background:var(–gpale);border-radius:8px;padding:9px;text-align:center}
-.rval{font-family:‘Bebas Neue’,sans-serif;font-size:22px;color:var(–green)}
+.ritem{background:var(–gp);border-radius:8px;padding:9px;text-align:center}
+.rval{font-family:‘Bebas Neue’,sans-serif;font-size:22px;color:var(–g)}
 .rlbl{font-size:10px;color:#888;font-weight:600;text-transform:uppercase;margin-top:1px}
 
-/* PLAY */
-#playView{padding:0;overflow:hidden}
-#holeNav{background:var(–skyl);padding:7px 12px;display:flex;justify-content:center;gap:4px;flex-shrink:0;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.06)}
+/* RESET BTN */
+.resetbtn{padding:7px 14px;background:var(–g);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer;margin-top:8px}
+
+/* PLAY VIEW */
+#holeNav{background:var(–skl);padding:7px 12px;display:flex;justify-content:center;gap:4px;flex-shrink:0;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.06)}
 #holeMain{flex:1;overflow-y:auto;padding:12px 13px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
-.hdot{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.4);font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:‘DM Sans’,sans-serif}
-.hdot.done{background:var(–green);border-color:var(–green);color:#fff}
-.hdot.cur{background:var(–gold);border-color:var(–gold);color:#fff;transform:scale(1.2)}
+.hdot{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.22);background:transparent;color:rgba(255,255,255,.4);font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:‘DM Sans’,sans-serif}
+.hdot.done{background:var(–g);border-color:var(–g);color:#fff}
+.hdot.cur{background:var(–go);border-color:var(–go);color:#fff;transform:scale(1.2)}
 .hinfo{background:rgba(255,255,255,.08);border-radius:10px;padding:10px 13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .hnum{font-family:‘Bebas Neue’,sans-serif;font-size:38px;color:#fff;letter-spacing:2px;line-height:1}
 .hbadges{display:flex;flex-direction:column;gap:4px}
 .hb{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
-.hbpar{background:var(–gold);color:#fff}
+.hbpar{background:var(–go);color:#fff}
 .hbsi{background:rgba(255,255,255,.15);color:rgba(255,255,255,.8)}
 .yrow{display:flex;gap:5px;flex-wrap:wrap}
-/* yard pills use same tee colors */
-.ypill{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;color:#fff}
-.ypw{background:#757575}.ypb{background:#1565c0}.ypr{background:#c62828}
-.ypg{background:#f57f17;color:#333}.ypk{background:#212121}
-.ypill.atee{box-shadow:0 0 0 2px #fff,0 0 0 4px var(–goldl)}
+.yp{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.yp-w{background:#757575;color:#fff}
+.yp-b{background:#1565c0;color:#fff}
+.yp-r{background:#c62828;color:#fff}
+.yp-g{background:#f57f17;color:#333}
+.yp-k{background:#212121;color:#fff}
+.yp.atee{box-shadow:0 0 0 2px #fff,0 0 0 4px var(–gol)}
 
 /* SCORE CARDS */
 .scards{display:grid;gap:8px}
 @media(min-width:580px){.scards{grid-template-columns:1fr 1fr}}
 .scard{background:#fff;border-radius:14px;padding:12px 13px;display:flex;align-items:center;gap:11px;box-shadow:var(–sh);border-left:5px solid #ddd}
-.scard.c0{border-left-color:#e74c3c}.scard.c1{border-left-color:#1565c0}
-.scard.c2{border-left-color:#9b59b6}.scard.c3{border-left-color:#e67e22}.scard.c4{border-left-color:#27ae60}
+.scard.c0{border-left-color:#e74c3c}
+.scard.c1{border-left-color:#1565c0}
+.scard.c2{border-left-color:#9b59b6}
+.scard.c3{border-left-color:#e67e22}
+.scard.c4{border-left-color:#27ae60}
 .spi{flex:1}
 .sname{font-size:15px;font-weight:700}
 .smeta{font-size:11px;color:#888;margin-top:2px}
+.smeta b{font-weight:700;color:#333}
+.smeta .vu{color:var(–re)}
+.smeta .ve{color:var(–g)}
+.smeta .vo{color:#7f8c8d}
 .sinp{display:flex;align-items:center;gap:7px}
-.sbtn2{width:44px;height:44px;border-radius:50%;border:none;font-size:22px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:‘DM Sans’,sans-serif;-webkit-user-select:none}
-.sbtn2.m{background:#fce8e6;color:var(–red)}.sbtn2.m:active{background:var(–red);color:#fff}
-.sbtn2.p{background:#e8f5ee;color:var(–green)}.sbtn2.p:active{background:var(–green);color:#fff}
-.sdisp{width:54px;height:54px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;background:#f4f4f4;border:2px solid #e8e8e8;position:relative}
+.sbtn2{width:44px;height:44px;border-radius:50%;border:none;font-size:22px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:‘DM Sans’,sans-serif;-webkit-user-select:none;user-select:none}
+.sbtn2.m{background:#fce8e6;color:var(–re)}
+.sbtn2.m:active{background:var(–re);color:#fff}
+.sbtn2.p{background:#e8f5ee;color:var(–g)}
+.sbtn2.p:active{background:var(–g);color:#fff}
+.sdisp{width:54px;height:54px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;background:#f4f4f4;border:2px solid #e8e8e8;position:relative;color:#1a2e4a}
+.sdash{color:#ccc}
 .sbdg{position:absolute;top:-6px;right:-6px;width:17px;height:17px;border-radius:50%;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;color:#fff}
-.bal{background:#8e44ad}.bea{background:var(–gold)}.bbi{background:var(–red)}
-.bpa{background:var(–green)}.bbo{background:#7f8c8d}.bdb{background:#2c3e50}.btr{background:#111}
+.bal{background:#8e44ad}.bea{background:var(–go)}.bbi{background:var(–re)}
+.bpa{background:var(–g)}.bbo{background:#7f8c8d}.bdb{background:#2c3e50}.btr{background:#111}
 
-#nextBtn{background:var(–green);color:#fff;border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer;flex-shrink:0;margin:0 13px 12px}
-#nextBtn:active{background:var(–greenl)}
+#nextBtn{background:var(–g);color:#fff;border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer;flex-shrink:0;margin:0 13px 12px}
+#nextBtn:active{background:var(–gl)}
 
 /* TOTALS */
 .lbcard{background:#fff;border-radius:14px;padding:13px;box-shadow:var(–sh)}
 .lbrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f0f0f0}
 .lbrow:last-child{border-bottom:none}
 .lbpos{font-family:‘Bebas Neue’,sans-serif;font-size:20px;color:#ccc;width:26px}
-.lbpos.g{color:var(–gold)}
+.lbpos.g{color:var(–go)}
 .lbname{flex:1;font-size:14px;font-weight:600}
 .lbsc{font-size:18px;font-weight:800}
 .lbvs{font-size:11px;color:#888;margin-left:3px}
-.cu{color:var(–red)}.ce{color:var(–green)}.co{color:#7f8c8d}
+.cu{color:var(–re)}.ce{color:var(–g)}.co{color:#7f8c8d}
 .stwrap{background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(–sh)}
-.stbl{width:100%;border-collapse:collapse;min-width:380px}
-.stbl th{background:var(–sky);color:rgba(255,255,255,.6);padding:7px 5px;font-size:10px;text-align:center;font-weight:700;text-transform:uppercase}
-.stbl th:first-child{text-align:left;padding-left:12px}
-.stbl td{padding:6px 5px;text-align:center;font-size:12px;border-bottom:1px solid #f0f0f0}
-.stbl td:first-child{text-align:left;padding-left:12px;font-size:11px;color:#666}
-.stbl tr:last-child td{font-weight:700;background:var(–gpale);border-bottom:none}
+.sotbl{width:100%;border-collapse:collapse;min-width:380px}
+.sotbl th{background:var(–sk);color:rgba(255,255,255,.6);padding:7px 5px;font-size:10px;text-align:center;font-weight:700;text-transform:uppercase}
+.sotbl th.thl{text-align:left;padding-left:12px}
+.sotbl td{padding:6px 5px;text-align:center;font-size:12px;border-bottom:1px solid #f0f0f0}
+.sotbl td.tdl{text-align:left;padding-left:12px;font-size:11px;color:#666}
+.sotbl tr.totr td{font-weight:700;background:var(–gp);border-bottom:none}
 .sc{border-radius:4px;display:inline-block;padding:1px 5px;font-weight:700;min-width:22px}
 .sea{background:#fef9c3;color:#854d0e}.sbi{background:#fee2e2;color:#991b1b}
 .spa{background:#e8f5ee;color:#1a6b3c}.sbo{background:#f0f0f0;color:#555}.sdb{background:#374151;color:#fff}
+.statbadge{padding:2px 8px;border-radius:12px;font-weight:600;font-size:12px;margin:2px;display:inline-block}
+.sb-ea{background:#fef9c3;color:#854d0e}
+.sb-bi{background:#fee2e2;color:#991b1b}
+.sb-pa{background:#e8f5ee;color:#1a6b3c}
+.sb-bo{background:#f0f0f0;color:#555}
+.sb-db{background:#374151;color:#fff}
+.sb-wr{background:#111;color:#fff}
+.statrow{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f0f0f0}
+.statname{font-weight:700;font-size:13px;margin-bottom:5px}
+.statname.c0{color:#e74c3c}.statname.c1{color:#1565c0}.statname.c2{color:#9b59b6}
+.statname.c3{color:#e67e22}.statname.c4{color:#27ae60}
+.statbadges{display:flex;gap:4px;flex-wrap:wrap}
 
 /* MODAL */
 #mOv{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:999;padding:20px}
 #mOv.on{display:flex}
 .modal{background:#fff;border-radius:18px;padding:22px;max-width:320px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-.modal h2{font-family:‘Bebas Neue’,sans-serif;font-size:22px;color:var(–green);margin-bottom:8px}
+.modal h2{font-family:‘Bebas Neue’,sans-serif;font-size:22px;color:var(–g);margin-bottom:8px}
 .modal p{font-size:13px;color:#555;margin-bottom:14px;line-height:1.5}
 .mbtns{display:flex;gap:8px}
 .mbtns button{flex:1;padding:11px;border-radius:10px;font-size:13px;font-weight:700;font-family:‘DM Sans’,sans-serif;cursor:pointer;border:none}
-.mc{background:#f0f0f0;color:#333}.md{background:var(–red);color:#fff}
+.mc{background:#f0f0f0;color:#333}
+.md{background:var(–re);color:#fff}
+
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
 </style>
 
 </head>
 <body>
+
 <div id="hdr">
   <div style="display:flex;align-items:center">
-    <div class="logo">⛳</div>
-    <div><div id="hdrCourse">Fairway Golf</div><div id="hdrDate"></div></div>
+    <div id="logo">⛳</div>
+    <div>
+      <div id="hdrCourse">Fairway Golf</div>
+      <div id="hdrDate"></div>
+    </div>
   </div>
   <button id="btnNew">↺ New</button>
 </div>
 
 <div id="tabs">
-  <button class="tab on"  data-tab="setup">⚙️ Setup</button>
-  <button class="tab"     data-tab="course">🔍 Course</button>
-  <button class="tab"     data-tab="info">📋 Card</button>
-  <button class="tab"     data-tab="play">🏌️ Play</button>
-  <button class="tab"     data-tab="totals">📊 Totals</button>
+  <button class="tab on"  data-v="setup">⚙️ Setup</button>
+  <button class="tab"     data-v="course">🔍 Course</button>
+  <button class="tab"     data-v="info">📋 Card</button>
+  <button class="tab"     data-v="play">🏌️ Play</button>
+  <button class="tab"     data-v="totals">📊 Totals</button>
 </div>
 
 <div id="app">
 
   <!-- SETUP -->
 
-  <div class="view on" id="setupView">
+  <div class="view on" id="v-setup">
     <div class="card">
       <div class="ct">🏌️ Round Settings</div>
       <div class="frow">
-        <div class="f" style="max-width:130px">
+        <div class="fl" style="max-width:150px">
           <label>Holes</label>
           <select id="numHoles">
             <option value="9">9 Holes</option>
@@ -231,24 +269,20 @@ body{font-family:'DM Sans',sans-serif;color:#1a2e4a;display:flex;flex-direction:
           </select>
         </div>
       </div>
-      <div style="margin-top:10px">
-        <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Playing Tee</div>
-        <div class="teebar" id="teebar">
-          <button class="teebtn on" data-tee="White">White</button>
-          <button class="teebtn"    data-tee="Blue">Blue</button>
-          <button class="teebtn"    data-tee="Red">Red</button>
-          <button class="teebtn"    data-tee="Gold">Gold</button>
-          <button class="teebtn"    data-tee="Black">Black</button>
-        </div>
+      <div class="teelbl">Playing Tee</div>
+      <div class="teebar" id="teebar">
+        <button class="tb tb-w on" data-tee="White">White</button>
+        <button class="tb tb-b"    data-tee="Blue">Blue</button>
+        <button class="tb tb-r"    data-tee="Red">Red</button>
+        <button class="tb tb-g"    data-tee="Gold">Gold</button>
+        <button class="tb tb-k"    data-tee="Black">Black</button>
       </div>
     </div>
 
 ```
 <div class="card">
   <div class="ct">👥 Players (up to 5)</div>
-  <div class="pgrid" id="pgrid">
-    <!-- built by JS -->
-  </div>
+  <div class="pgrid" id="pgrid"></div>
 </div>
 
 <button class="startbtn" id="startBtn">🏌️ Start Round →</button>
@@ -258,42 +292,43 @@ body{font-family:'DM Sans',sans-serif;color:#1a2e4a;display:flex;flex-direction:
 
   <!-- COURSE SEARCH -->
 
-  <div class="view" id="courseView">
+  <div class="view" id="v-course">
     <div class="sbox">
       <div class="stitle">🔍 Course Database</div>
-      <div class="ssub">Search 17,000+ courses worldwide. No signup, no key needed — completely free.</div>
+      <div class="ssub">17,000+ courses — no signup, no key needed.</div>
       <div class="srow">
-        <input type="text" class="sinput" id="sInput" placeholder="Course name, city, or country…">
+        <input type="search" class="sinput" id="sInput" placeholder="Search course name…">
         <button class="sbtn" id="sBtn">Search</button>
       </div>
       <div id="sst"></div>
       <div id="rlist"></div>
     </div>
     <div id="lbanner">
-      <div><div class="lname" id="lName">—</div><div class="lmeta" id="lMeta">—</div></div>
+      <div>
+        <div class="lname" id="lName">—</div>
+        <div class="lmeta" id="lMeta">—</div>
+      </div>
       <button class="lbtn" id="viewCardBtn">View Card →</button>
     </div>
   </div>
 
   <!-- COURSE CARD -->
 
-  <div class="view" id="infoView">
+  <div class="view" id="v-info">
     <div class="card" id="ratCard" style="display:none">
       <div class="ct">🏅 Course Ratings</div>
       <div class="rgrid" id="ratGrid"></div>
     </div>
     <div class="card" style="padding:12px 10px">
-      <div class="ct">📐 Scorecard <span id="infoTee" style="font-size:11px;font-weight:400;color:#999;font-family:'DM Sans',sans-serif;letter-spacing:0"></span></div>
+      <div class="ct">📐 Scorecard <span id="infoTee" class="ct-sub"></span></div>
       <div class="twrap"><table class="citbl" id="ciTbl"></table></div>
-      <div style="margin-top:8px">
-        <button id="resetDataBtn" style="padding:7px 14px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer">Reset to Defaults</button>
-      </div>
+      <button class="resetbtn" id="resetDataBtn">Reset to Defaults</button>
     </div>
   </div>
 
   <!-- PLAY -->
 
-  <div class="view" id="playView">
+  <div class="view" id="v-play">
     <div id="holeNav"></div>
     <div id="holeMain"></div>
     <button id="nextBtn">Next Hole →</button>
@@ -301,9 +336,10 @@ body{font-family:'DM Sans',sans-serif;color:#1a2e4a;display:flex;flex-direction:
 
   <!-- TOTALS -->
 
-  <div class="view" id="totalsView">
+  <div class="view" id="v-totals">
     <div id="totWrap"></div>
   </div>
+
 </div>
 
 <div id="mOv">
@@ -318,79 +354,101 @@ body{font-family:'DM Sans',sans-serif;color:#1a2e4a;display:flex;flex-direction:
 </div>
 
 <script>
-// ════ STATE ════
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
 var S = {
   course:'', holes:18, tee:'White',
-  players:[
-    {n:'',h:0},{n:'',h:0},{n:'',h:0},{n:'',h:0},{n:'',h:0}
-  ],
-  hd: mkH(18),
+  players:[{n:'',h:0},{n:'',h:0},{n:'',h:0},{n:'',h:0},{n:'',h:0}],
+  hd: makeHoles(18),
   ratings:{},
   scores:[], cur:0, started:false
 };
 var TEES = ['White','Blue','Red','Gold','Black'];
-var TPFX = {White:'ypw',Blue:'ypb',Red:'ypr',Gold:'ypg',Black:'ypk'};
-var PCLR = ['#e74c3c','#1565c0','#9b59b6','#e67e22','#27ae60'];
+var TYCLS = {White:'yp-w',Blue:'yp-b',Red:'yp-r',Gold:'yp-g',Black:'yp-k'};
+var PCLR  = ['c0','c1','c2','c3','c4'];
 
-function mkH(n){
-  var p18=[4,5,3,4,4,3,4,5,4,4,4,3,5,4,3,5,4,4];
-  var s18=[1,13,7,11,3,15,5,9,17,2,14,8,10,4,16,6,12,18];
-  var yw =[380,510,165,395,410,155,440,505,385,370,400,180,520,405,145,480,390,375];
+function makeHoles(n){
+  var p=[4,5,3,4,4,3,4,5,4,4,4,3,5,4,3,5,4,4];
+  var s=[1,13,7,11,3,15,5,9,17,2,14,8,10,4,16,6,12,18];
+  var y=[380,510,165,395,410,155,440,505,385,370,400,180,520,405,145,480,390,375];
   var a=[];
   for(var i=0;i<n;i++){
-    var w=yw[i]||380;
-    a.push({par:p18[i]||4,si:s18[i]||(i+1),
+    var w=y[i]||380;
+    a.push({par:p[i]||4,si:s[i]||(i+1),
       yards:{White:w,Blue:Math.round(w*1.07),Red:Math.round(w*.84),
              Gold:Math.round(w*1.1),Black:Math.round(w*1.14)}});
   }
   return a;
 }
 
-// ════ PERSIST ════
-function save(){ try{localStorage.setItem('fw4',JSON.stringify(S));}catch(e){} }
+/* ═══════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════ */
+function esc(t){ var d=document.createElement('div');d.textContent=t;return d.innerHTML; }
+function $(id){ return document.getElementById(id); }
+function setSt(msg,cls){
+  var e=$('sst');
+  e.textContent=msg;
+  e.className=cls||'';
+}
+
+/* ═══════════════════════════════════════
+   PERSIST
+═══════════════════════════════════════ */
+function save(){ try{localStorage.setItem('fw5',JSON.stringify(S));}catch(e){} }
 function load(){
   try{
-    var r=localStorage.getItem('fw4'); if(!r)return;
-    var v=JSON.parse(r); Object.assign(S,v);
-    document.getElementById('numHoles').value=S.holes;
+    var raw=localStorage.getItem('fw5'); if(!raw)return;
+    var v=JSON.parse(raw); Object.assign(S,v);
+    $('numHoles').value=S.holes;
     buildPlayerGrid();
-    for(var i=0;i<5;i++){
-      var ni=document.getElementById('pn'+i);
-      var hi=document.getElementById('ph'+i);
-      if(ni)ni.value=S.players[i].n||'';
-      if(hi)hi.value=S.players[i].h||0;
-      var ps=document.getElementById('ps'+i);
-      if(ps)ps.classList.toggle('on',(S.players[i].n||'').trim().length>0);
-    }
-    document.querySelectorAll('.teebtn').forEach(function(b){
+    document.querySelectorAll('.tb').forEach(function(b){
       b.classList.toggle('on',b.dataset.tee===S.tee);
     });
     if(S.course){
-      document.getElementById('hdrCourse').textContent=S.course;
-      document.getElementById('lbanner').classList.add('on');
-      document.getElementById('lName').textContent=S.course;
-      document.getElementById('lMeta').textContent=S.holes+' holes';
+      $('hdrCourse').textContent=S.course;
+      $('lbanner').classList.add('on');
+      $('lName').textContent=S.course;
+      $('lMeta').textContent=S.holes+' holes';
     }
     if(S.started){ buildDots(); renderHole(S.cur); switchTab('play'); }
-  }catch(e){console.log('load err',e);}
+  }catch(e){ console.log(e); }
 }
 
-// ════ PLAYERS GRID ════
+/* ═══════════════════════════════════════
+   TABS
+═══════════════════════════════════════ */
+function switchTab(name){
+  ['setup','course','info','play','totals'].forEach(function(k){
+    $('v-'+k).classList.toggle('on',k===name);
+  });
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.classList.toggle('on',t.dataset.v===name);
+  });
+  if(name==='info'){ buildTable(); buildRatings(); }
+  if(name==='play'&&S.started){ buildDots(); renderHole(S.cur); }
+  if(name==='totals'){ renderTotals(); }
+}
+
+/* ═══════════════════════════════════════
+   PLAYER GRID
+═══════════════════════════════════════ */
 function buildPlayerGrid(){
-  var g=document.getElementById('pgrid'); g.innerHTML='';
-  var labels=['Player 1','Player 2 (opt)','Player 3 (opt)','Player 4 (opt)','Player 5 (opt)'];
+  var g=$('pgrid'); g.innerHTML='';
+  var lbls=['Player 1','Player 2 (opt)','Player 3 (opt)','Player 4 (opt)','Player 5 (opt)'];
   for(var i=0;i<5;i++){
     var d=document.createElement('div');
     d.className='ps'; d.id='ps'+i;
     if((S.players[i].n||'').trim()) d.classList.add('on');
-    d.innerHTML='<div class="pslbl">'+labels[i]+'</div>'
-      +'<input type="text" placeholder="Name" id="pn'+i+'" value="'+(S.players[i].n||'')+'">'
+    d.innerHTML='<div class="pslbl">'+lbls[i]+'</div>'
+      +'<input type="text" placeholder="Name" id="pn'+i+'" value="'+esc(S.players[i].n||'')+'">'
       +'<input type="number" placeholder="Handicap" min="0" max="54" id="ph'+i+'" value="'+(S.players[i].h||0)+'">';
     g.appendChild(d);
     (function(idx){
       d.querySelector('input[type=text]').addEventListener('input',function(){
         S.players[idx].n=this.value;
-        d.classList.toggle('on',this.value.trim().length>0);
+        $('ps'+idx).classList.toggle('on',this.value.trim().length>0);
       });
       d.querySelector('input[type=number]').addEventListener('input',function(){
         S.players[idx].h=parseInt(this.value)||0;
@@ -399,185 +457,130 @@ function buildPlayerGrid(){
   }
 }
 
-// ════ TABS ════
-function switchTab(name){
-  ['setup','course','info','play','totals'].forEach(function(k){
-    document.getElementById(k+'View').classList.toggle('on',k===name);
-  });
-  document.querySelectorAll('.tab').forEach(function(t){
-    t.classList.toggle('on',t.dataset.tab===name);
-  });
-  if(name==='info'){buildTable();buildRatings();}
-  if(name==='play'&&S.started){buildDots();renderHole(S.cur);}
-  if(name==='totals')renderTotals();
-}
-
-// ════ TEE ════
-function initTeebar(){
-  document.getElementById('teebar').addEventListener('click',function(e){
-    var b=e.target.closest('.teebtn'); if(!b)return;
-    S.tee=b.dataset.tee;
-    document.querySelectorAll('#teebar .teebtn').forEach(function(x){x.classList.remove('on');});
-    b.classList.add('on'); save();
-  });
-}
-
-// ════ API KEY ════
-function getKey(){ return localStorage.getItem('golfapikey')||''; }
-function initApiKey(){
-  if(getKey()) document.getElementById('apibox').style.display='none';
-  document.getElementById('apiSaveBtn').addEventListener('click',function(){
-    var v=document.getElementById('apiKeyInput').value.trim(); if(!v)return;
-    localStorage.setItem('golfapikey',v);
-    document.getElementById('apiSt').textContent='✅ Key saved!';
-    document.getElementById('apiSt').style.color='#2ecc71';
-    setTimeout(function(){ document.getElementById('apibox').style.display='none'; },800);
-  });
-}
-
-// ════ SEARCH — OpenGolfAPI (no key needed) ════
-// https://api.opengolfapi.org/v1/courses/search?q=pebble+beach
-function setSt(msg,col){ var e=document.getElementById('sst'); e.textContent=msg; e.style.color=col||'rgba(255,255,255,.5)'; }
-
-function initSearch(){
-  document.getElementById('sBtn').addEventListener('click',doSearch);
-  document.getElementById('sInput').addEventListener('keydown',function(e){ if(e.key==='Enter')doSearch(); });
-}
-
+/* ═══════════════════════════════════════
+   SEARCH — OpenGolfAPI (no key)
+═══════════════════════════════════════ */
 async function doSearch(){
-  var q=(document.getElementById('sInput').value||'').trim(); if(!q)return;
-  var btn=document.getElementById('sBtn'); btn.disabled=true; btn.textContent='…';
-  setSt('Searching…','rgba(255,255,255,.6)');
-  document.getElementById('rlist').innerHTML='';
+  var q=($('sInput').value||'').trim(); if(!q)return;
+  var btn=$('sBtn'); btn.disabled=true; btn.textContent='…';
+  setSt('Searching…');
+  $('rlist').innerHTML='';
   try{
-    var url='https://api.opengolfapi.org/v1/courses/search?q='+encodeURIComponent(q)+'&limit=15';
-    var res=await fetch(url,{headers:{'Accept':'application/json'}});
+    var res=await fetch('https://api.opengolfapi.org/v1/courses/search?q='+encodeURIComponent(q)+'&limit=15');
     if(!res.ok) throw new Error('HTTP '+res.status);
     var data=await res.json();
-    // response is array or {courses:[...]} or {results:[...]}
-    var courses=Array.isArray(data)?data:(data.courses||data.results||data.data||[]);
-    if(courses.length){
-      setSt(courses.length+' found — tap to load','#2ecc71');
-      renderResults(courses);
+    var list=Array.isArray(data)?data:(data.courses||data.results||data.data||[]);
+    if(list.length){
+      setSt(list.length+' found — tap to load','sst-ok');
+      renderResults(list);
     } else {
-      setSt('No results. Try the full course name (e.g. "Doral Golf" not just "Doral").','rgba(255,255,255,.55)');
+      setSt('No results. Try a more specific course name.','sst-warn');
     }
   }catch(e){
-    setSt('❌ Search failed: '+e.message,'#e74c3c');
+    setSt('Search failed: '+e.message,'sst-err');
   }
   btn.disabled=false; btn.textContent='Search';
 }
 
-function renderResults(courses){
-  var list=document.getElementById('rlist'); list.innerHTML='';
-  courses.slice(0,15).forEach(function(course){
-    var d=document.createElement('div'); d.className='rcard';
-    // OpenGolfAPI fields: name, city, state, country, par, holes, id
-    var name=course.name||course.club_name||course.ClubName||'Unknown Course';
-    var city=course.city||course.City||'';
-    var state=course.state||course.State||'';
-    var country=course.country||course.Country||'';
+function renderResults(list){
+  var el=$('rlist'); el.innerHTML='';
+  list.forEach(function(c){
+    var name=c.name||c.club_name||'Unknown';
+    var city=c.city||''; var state=c.state||''; var country=c.country||'';
     var loc=[city,state,country].filter(Boolean).join(', ');
-    var holes=course.holes||course.number_of_holes||18;
-    var par=course.par?(' · Par '+course.par):'';
-    d.innerHTML='<div style="flex:1"><div class="rname">'+esc(name)+'</div>'
+    var holes=c.holes||c.number_of_holes||18;
+    var par=c.par?(' · Par '+c.par):'';
+    var d=document.createElement('div'); d.className='rcard';
+    d.innerHTML='<div><div class="rname">'+esc(name)+'</div>'
       +(loc?'<div class="rloc">'+esc(loc)+'</div>':'')+'</div>'
       +'<div class="rmeta">'+holes+'H'+par+'</div>'
-      +'<div style="color:rgba(255,255,255,.3);font-size:16px">›</div>';
-    d.addEventListener('click',function(){ loadCourse(course,d); });
-    list.appendChild(d);
+      +'<div class="rarrow">›</div>';
+    d.addEventListener('click',function(){ loadCourse(c,d); });
+    el.appendChild(d);
   });
 }
-function esc(s){ var d=document.createElement('div');d.textContent=s;return d.innerHTML; }
 
-async function loadCourse(course,card){
-  card.style.opacity='.5'; setSt('Loading course data…','rgba(255,255,255,.6)');
-  var id=course.id||course.course_id||course.courseId;
+async function loadCourse(course, card){
+  card.style.opacity='.5';
+  setSt('Loading…','sst-ok');
+  var id=course.id||course.course_id;
   var loaded=false;
   if(id){
     try{
-      var r=await fetch('https://api.opengolfapi.org/v1/courses/'+id,{headers:{'Accept':'application/json'}});
-      if(r.ok){
-        var detail=await r.json();
-        applyOpenGolf(detail); loaded=true;
-      }
+      var r=await fetch('https://api.opengolfapi.org/v1/courses/'+id);
+      if(r.ok){ var detail=await r.json(); applyDetail(detail); loaded=true; }
     }catch(e){}
   }
-  // If no detail or no id, apply what we already have from search result
-  if(!loaded) applyOpenGolfBasic(course);
-  setSt(loaded?'✅ Course loaded!':'✅ Basic data loaded.','#2ecc71');
+  if(!loaded) applyBasic(course);
+  setSt('✅ '+(loaded?'Full':'Basic')+' data loaded','sst-ok');
   card.style.opacity='1';
 }
 
-function applyOpenGolf(course){
-  // OpenGolfAPI detail: {name, city, state, par, holes, scorecard:[{hole,par},...]}
-  S.course = course.name||'Golf Course';
-  S.holes  = course.holes||course.number_of_holes||18;
-  document.getElementById('numHoles').value=S.holes;
-  S.hd=mkH(S.holes); S.ratings={};
-  // Apply scorecard pars if available
-  var sc=course.scorecard||course.holes_data||[];
+function applyDetail(c){
+  S.course=c.name||'Golf Course';
+  S.holes=c.holes||c.number_of_holes||18;
+  $('numHoles').value=S.holes;
+  S.hd=makeHoles(S.holes); S.ratings={};
+  var sc=c.scorecard||c.holes_data||[];
   if(Array.isArray(sc)){
     sc.forEach(function(h){
       var idx=(h.hole||h.number||1)-1;
       if(idx>=0&&idx<S.hd.length){
         if(h.par) S.hd[idx].par=parseInt(h.par)||S.hd[idx].par;
-        if(h.handicap||h.si||h.stroke_index) S.hd[idx].si=parseInt(h.handicap||h.si||h.stroke_index)||S.hd[idx].si;
-        // yardages
-        if(h.yards||h.yardage||h.length) S.hd[idx].yards.White=parseInt(h.yards||h.yardage||h.length)||S.hd[idx].yards.White;
-        if(h.blue_yards||h.blue) S.hd[idx].yards.Blue=parseInt(h.blue_yards||h.blue);
-        if(h.red_yards||h.red)   S.hd[idx].yards.Red=parseInt(h.red_yards||h.red);
-        if(h.gold_yards||h.gold) S.hd[idx].yards.Gold=parseInt(h.gold_yards||h.gold);
-        if(h.black_yards||h.black) S.hd[idx].yards.Black=parseInt(h.black_yards||h.black);
+        if(h.handicap||h.si) S.hd[idx].si=parseInt(h.handicap||h.si)||S.hd[idx].si;
+        var yd=h.yards||h.yardage||h.length;
+        if(yd) S.hd[idx].yards.White=parseInt(yd)||S.hd[idx].yards.White;
       }
     });
   }
-  finishLoad(course);
+  finishLoad(c);
 }
 
-function applyOpenGolfBasic(course){
-  S.course=course.name||'Golf Course';
-  S.holes=course.holes||course.number_of_holes||18;
-  document.getElementById('numHoles').value=S.holes;
-  if(S.hd.length!==S.holes) S.hd=mkH(S.holes);
-  // use top-level par if available
-  finishLoad(course);
+function applyBasic(c){
+  S.course=c.name||c.club_name||'Golf Course';
+  S.holes=c.holes||c.number_of_holes||18;
+  $('numHoles').value=S.holes;
+  if(S.hd.length!==S.holes) S.hd=makeHoles(S.holes);
+  finishLoad(c);
 }
 
-// finishLoad shared by both apply functions
-
-function finishLoad(club){
-  var city=club.city||club.City||'';
-  var state=club.state||club.State||'';
-  var loc=[city,state].filter(Boolean).join(', ');
-  document.getElementById('hdrCourse').textContent=S.course;
-  document.getElementById('lbanner').classList.add('on');
-  document.getElementById('lName').textContent=S.course;
-  document.getElementById('lMeta').textContent=(loc?loc+' · ':'')+S.holes+' holes';
+function finishLoad(c){
+  var loc=[c.city||'',c.state||''].filter(Boolean).join(', ');
+  $('hdrCourse').textContent=S.course;
+  $('lbanner').classList.add('on');
+  $('lName').textContent=S.course;
+  $('lMeta').textContent=(loc?loc+' · ':'')+S.holes+' holes';
   save();
 }
 
-// ════ COURSE TABLE ════
+/* ═══════════════════════════════════════
+   COURSE TABLE
+═══════════════════════════════════════ */
 function buildTable(){
-  document.getElementById('infoTee').textContent='Active tee: '+S.tee;
-  var tbl=document.getElementById('ciTbl');
-  var h='<thead><tr><th style="text-align:left;padding-left:10px">Hole</th><th>Par</th><th>SI</th>'
-    +'<th class="th-w">White</th><th class="th-b">Blue</th><th class="th-r">Red</th>'
-    +'<th class="th-g" style="color:#333">Gold</th><th class="th-k">Black</th></tr></thead><tbody>';
+  $('infoTee').textContent='Active: '+S.tee;
+  var tbl=$('ciTbl');
+  var h='<thead><tr>'
+    +'<th class="thh">Hole</th><th>Par</th><th>SI</th>'
+    +'<th class="tbl-w">White</th>'
+    +'<th class="tbl-b">Blue</th>'
+    +'<th class="tbl-r">Red</th>'
+    +'<th class="tbl-g">Gold</th>'
+    +'<th class="tbl-k">Black</th>'
+    +'</tr></thead><tbody>';
   var tp=0,tots={White:0,Blue:0,Red:0,Gold:0,Black:0};
-  for(var i=0;i<S.hd.length;i++){
-    var hd=S.hd[i]; tp+=hd.par;
+  S.hd.forEach(function(hd,i){
+    tp+=hd.par;
     TEES.forEach(function(t){tots[t]+=(hd.yards[t]||0);});
-    var row='<tr><td>H'+(i+1)+'</td>'
+    h+='<tr><td class="tdhh">H'+(i+1)+'</td>'
       +'<td><input type="number" min="3" max="6" value="'+hd.par+'" data-i="'+i+'" data-f="par"></td>'
       +'<td><input type="number" min="1" max="18" value="'+hd.si+'" data-i="'+i+'" data-f="si"></td>';
     TEES.forEach(function(t){
-      var ac=t===S.tee?' atee':'';
-      row+='<td><input type="number" min="50" max="850" value="'+(hd.yards[t]||0)+'" class="'+ac+'" data-i="'+i+'" data-t="'+t+'"></td>';
+      h+='<td><input type="number" min="50" max="850" value="'+(hd.yards[t]||0)+'"'
+        +' class="'+(t===S.tee?'atee':'')+'" data-i="'+i+'" data-t="'+t+'"></td>';
     });
-    row+='</tr>'; h+=row;
-  }
-  h+='<tr class="trow"><td>Total</td><td>'+tp+'</td><td>—</td>'
+    h+='</tr>';
+  });
+  h+='<tr class="trow"><td class="tdhh">Total</td><td>'+tp+'</td><td>—</td>'
     +TEES.map(function(t){return'<td>'+tots[t]+'</td>';}).join('')+'</tr></tbody>';
   tbl.innerHTML=h;
   tbl.querySelectorAll('input').forEach(function(inp){
@@ -591,52 +594,36 @@ function buildTable(){
 }
 
 function buildRatings(){
-  var card=document.getElementById('ratCard'); var grid=document.getElementById('ratGrid');
-  var keys=Object.keys(S.ratings||{}); if(!keys.length){card.style.display='none';return;}
+  var card=$('ratCard'); var grid=$('ratGrid');
+  var keys=Object.keys(S.ratings||{});
+  if(!keys.length){card.style.display='none';return;}
   card.style.display='block'; grid.innerHTML='';
   keys.forEach(function(tee){
     var r=S.ratings[tee];
-    if(r.cr)grid.innerHTML+='<div class="ritem"><div class="rval">'+r.cr+'</div><div class="rlbl">'+tee+' Rating</div></div>';
-    if(r.sr)grid.innerHTML+='<div class="ritem"><div class="rval">'+r.sr+'</div><div class="rlbl">'+tee+' Slope</div></div>';
-    if(r.ty)grid.innerHTML+='<div class="ritem"><div class="rval">'+r.ty+'</div><div class="rlbl">'+tee+' Yards</div></div>';
+    if(r.cr) grid.innerHTML+='<div class="ritem"><div class="rval">'+r.cr+'</div><div class="rlbl">'+tee+' Rating</div></div>';
+    if(r.sr) grid.innerHTML+='<div class="ritem"><div class="rval">'+r.sr+'</div><div class="rlbl">'+tee+' Slope</div></div>';
+    if(r.ty) grid.innerHTML+='<div class="ritem"><div class="rval">'+r.ty+'</div><div class="rlbl">'+tee+' Yards</div></div>';
   });
 }
 
-// ════ SETUP ════
-function initSetup(){
-  document.getElementById('numHoles').addEventListener('change',function(){
-    S.holes=parseInt(this.value);
-    if(S.hd.length!==S.holes) S.hd=mkH(S.holes);
-    save();
-  });
-  document.getElementById('startBtn').addEventListener('click',function(){
-    S.holes=parseInt(document.getElementById('numHoles').value);
-    for(var i=0;i<5;i++){
-      var ni=document.getElementById('pn'+i); var hi=document.getElementById('ph'+i);
-      S.players[i].n=(ni?ni.value.trim():''); S.players[i].h=(hi?parseInt(hi.value)||0:0);
-    }
-    if(!S.players.filter(function(p){return p.n;}).length) S.players[0].n='Player 1';
-    if(!S.course) S.course='Golf Course';
-    S.scores=[]; for(var h=0;h<S.holes;h++) S.scores.push([0,0,0,0,0]);
-    S.cur=0; S.started=true;
-    document.getElementById('hdrCourse').textContent=S.course;
-    save(); buildDots(); renderHole(0); switchTab('play');
-  });
-  document.getElementById('resetDataBtn').addEventListener('click',function(){ S.hd=mkH(S.holes); buildTable(); save(); });
-  document.getElementById('viewCardBtn').addEventListener('click',function(){ switchTab('info'); });
-}
-
-// ════ PLAY ════
+/* ═══════════════════════════════════════
+   PLAY
+═══════════════════════════════════════ */
 function ap(){ return S.players.filter(function(p){return(p.n||'').trim();}); }
 function fvs(v){ return v===0?'E':v>0?'+'+v:''+v; }
-function vc(v){ return v<0?'var(--red)':v===0?'var(--green)':'#7f8c8d'; }
-function isDone(h){ var done=true; ap().forEach(function(_,pi){ if(!((S.scores[h]&&S.scores[h][pi])||0))done=false; }); return done; }
+function vcls(v){ return v<0?'vu':v===0?'ve':'vo'; }
+
+function isDone(h){
+  var ok=true;
+  ap().forEach(function(_,pi){ if(!((S.scores[h]&&S.scores[h][pi])||0)) ok=false; });
+  return ok;
+}
 
 function buildDots(){
-  var el=document.getElementById('holeNav'); el.innerHTML='';
+  var el=$('holeNav'); el.innerHTML='';
   for(var i=0;i<S.holes;i++){
-    var d=document.createElement('button'); d.className='hdot';
-    if(i===S.cur) d.classList.add('cur'); else if(isDone(i)) d.classList.add('done');
+    var d=document.createElement('button');
+    d.className='hdot'+(i===S.cur?' cur':isDone(i)?' done':'');
     d.textContent=i+1;
     (function(idx){ d.addEventListener('click',function(){ S.cur=idx; buildDots(); renderHole(idx); }); })(i);
     el.appendChild(d);
@@ -646,56 +633,68 @@ function buildDots(){
 function pTot(pi){
   var g=0,pt=0;
   for(var h=0;h<S.holes;h++){
-    var s=(S.scores[h]&&S.scores[h][pi])||0;
-    if(s>0){ g+=s; pt+=(S.hd[h]?S.hd[h].par:4); }
+    var sc=(S.scores[h]&&S.scores[h][pi])||0;
+    if(sc>0){ g+=sc; pt+=(S.hd[h]?S.hd[h].par:4); }
   }
   return{g:g,vs:g-pt};
 }
 
-function dispSc(s,par){
-  if(!s) return'<span style="color:#ccc">–</span>';
-  var d=s-par;
-  var b=d<=-3?'<div class="sbdg bal">A</div>':d===-2?'<div class="sbdg bea">E</div>':d===-1?'<div class="sbdg bbi">B</div>':
-         d===0?'<div class="sbdg bpa">P</div>':d===1?'<div class="sbdg bbo">+1</div>':
-         d===2?'<div class="sbdg bdb">+2</div>':'<div class="sbdg btr">+'+d+'</div>';
-  return s+b;
+function makeBadge(s,par){
+  if(!s) return '<span class="sdash">–</span>';
+  var d=s-par,cls,lbl;
+  if(d<=-3){cls='bal';lbl='A';}
+  else if(d===-2){cls='bea';lbl='E';}
+  else if(d===-1){cls='bbi';lbl='B';}
+  else if(d===0){cls='bpa';lbl='P';}
+  else if(d===1){cls='bbo';lbl='+1';}
+  else if(d===2){cls='bdb';lbl='+2';}
+  else{cls='btr';lbl='+'+d;}
+  return s+'<div class="sbdg '+cls+'">'+lbl+'</div>';
 }
 
 function renderHole(h){
   var hd=S.hd[h]||{par:4,si:h+1,yards:{White:380,Blue:405,Red:310,Gold:420,Black:430}};
   var par=hd.par; var players=ap();
-  var el=document.getElementById('holeMain'); el.innerHTML='';
+  var el=$('holeMain'); el.innerHTML='';
 
+  // Hole info bar
+  var info=document.createElement('div'); info.className='hinfo';
   var pills='';
   TEES.forEach(function(t){
     var y=hd.yards[t]; if(!y)return;
-    pills+='<span class="ypill '+TPFX[t]+(t===S.tee?' atee':'')+'" title="'+t+'">'+t[0]+': '+y+'y</span>';
+    pills+='<span class="yp '+TYCLS[t]+(t===S.tee?' atee':'')+'">'
+      +t.charAt(0)+': '+y+'y</span>';
   });
-  var info=document.createElement('div'); info.className='hinfo';
   info.innerHTML='<div class="hnum">H'+(h+1)+'</div>'
-    +'<div class="hbadges"><span class="hb hbpar">Par '+par+'</span><span class="hb hbsi">SI '+hd.si+'</span></div>'
+    +'<div class="hbadges">'
+    +'<span class="hb hbpar">Par '+par+'</span>'
+    +'<span class="hb hbsi">SI '+hd.si+'</span>'
+    +'</div>'
     +'<div class="yrow">'+pills+'</div>';
   el.appendChild(info);
 
+  // Score cards
   var grid=document.createElement('div'); grid.className='scards';
   players.forEach(function(p,pi){
     if(!S.scores[h]) S.scores[h]=[0,0,0,0,0];
     if(!S.scores[h][pi]) S.scores[h][pi]=par;
     var tot=pTot(pi);
-    var card=document.createElement('div'); card.className='scard c'+pi;
+    var card=document.createElement('div'); card.className='scard '+PCLR[pi];
+    var metaHtml='Total: <b>'+tot.g+'</b> | <span class="'+vcls(tot.vs)+'">'+fvs(tot.vs)+'</span>';
     card.innerHTML='<div class="spi">'
       +'<div class="sname">'+esc(p.n)+'</div>'
-      +'<div class="smeta" id="mt'+pi+'">Total: <b>'+tot.g+'</b> | <span style="color:'+vc(tot.vs)+'">'+fvs(tot.vs)+'</span></div>'
+      +'<div class="smeta" id="mt'+pi+'">'+metaHtml+'</div>'
       +'</div>'
       +'<div class="sinp">'
       +'<button class="sbtn2 m" data-h="'+h+'" data-pi="'+pi+'">−</button>'
-      +'<div class="sdisp" id="sd'+h+'_'+pi+'">'+dispSc(S.scores[h][pi],par)+'</div>'
+      +'<div class="sdisp" id="sd'+h+'_'+pi+'">'+makeBadge(S.scores[h][pi],par)+'</div>'
       +'<button class="sbtn2 p" data-h="'+h+'" data-pi="'+pi+'">+</button>'
       +'</div>';
     grid.appendChild(card);
   });
   el.appendChild(grid);
 
+  // Score button events via delegation
   grid.addEventListener('click',function(e){
     var btn=e.target.closest('.sbtn2'); if(!btn)return;
     var bh=parseInt(btn.dataset.h); var bpi=parseInt(btn.dataset.pi);
@@ -703,101 +702,163 @@ function renderHole(h){
     if(!S.scores[bh]) S.scores[bh]=[0,0,0,0,0];
     var cur=S.scores[bh][bpi]||par2;
     S.scores[bh][bpi]=btn.classList.contains('m')?Math.max(1,cur-1):Math.min(15,cur+1);
-    var dd=document.getElementById('sd'+bh+'_'+bpi);
-    if(dd) dd.innerHTML=dispSc(S.scores[bh][bpi],par2);
-    var tot2=pTot(bpi); var mt=document.getElementById('mt'+bpi);
-    if(mt) mt.innerHTML='Total: <b>'+tot2.g+'</b> | <span style="color:'+vc(tot2.vs)+'">'+fvs(tot2.vs)+'</span>';
-    document.getElementById('nextBtn').textContent=S.cur===S.holes-1?'🏁 Finish Round':'Next Hole →';
+    var dd=$('sd'+bh+'_'+bpi);
+    if(dd) dd.innerHTML=makeBadge(S.scores[bh][bpi],par2);
+    var tot2=pTot(bpi); var mt=$('mt'+bpi);
+    if(mt) mt.innerHTML='Total: <b>'+tot2.g+'</b> | <span class="'+vcls(tot2.vs)+'">'+fvs(tot2.vs)+'</span>';
+    $('nextBtn').textContent=S.cur===S.holes-1?'🏁 Finish Round':'Next Hole →';
     save();
   });
-  document.getElementById('nextBtn').textContent=S.cur===S.holes-1?'🏁 Finish Round':'Next Hole →';
+  $('nextBtn').textContent=S.cur===S.holes-1?'🏁 Finish Round':'Next Hole →';
 }
 
-function initPlay(){
-  document.getElementById('nextBtn').addEventListener('click',function(){
-    if(S.cur<S.holes-1){ S.cur++; save(); buildDots(); renderHole(S.cur); }
-    else{ save(); switchTab('totals'); }
-  });
-}
-
-// ════ TOTALS ════
+/* ═══════════════════════════════════════
+   TOTALS
+═══════════════════════════════════════ */
 function renderTotals(){
-  var players=ap(); var wrap=document.getElementById('totWrap'); wrap.innerHTML='';
+  var players=ap(); var wrap=$('totWrap'); wrap.innerHTML='';
+
+  // Leaderboard
   var lb=document.createElement('div'); lb.className='lbcard';
   lb.innerHTML='<div class="ct">🏆 Leaderboard</div>';
-  var sorted=players.map(function(p,i){var t=pTot(i);return{n:p.n,pi:i,g:t.g,vs:t.vs};}).sort(function(a,b){return a.vs-b.vs;});
+  var sorted=players.map(function(p,i){var t=pTot(i);return{n:p.n,pi:i,g:t.g,vs:t.vs};})
+    .sort(function(a,b){return a.vs-b.vs;});
   sorted.forEach(function(p,r){
     var cls=p.vs<0?'cu':p.vs===0?'ce':'co';
-    lb.innerHTML+='<div class="lbrow"><div class="lbpos'+(r===0?' g':'')+'>'+(r===0?'🥇':r+1)+'</div>'
+    lb.innerHTML+='<div class="lbrow">'
+      +'<div class="lbpos'+(r===0?' g':'')+'>'+(r===0?'🥇':r+1)+'</div>'
       +'<div class="lbname">'+esc(p.n)+'</div>'
-      +'<div class="lbsc '+cls+'">'+p.g+'<span class="lbvs">('+fvs(p.vs)+')</span></div></div>';
+      +'<div class="lbsc '+cls+'">'+p.g+'<span class="lbvs">('+fvs(p.vs)+')</span></div>'
+      +'</div>';
   });
   wrap.appendChild(lb);
 
+  // Scorecard table
   var tw=document.createElement('div'); tw.className='stwrap';
-  var h='<div style="overflow-x:auto"><table class="stbl"><thead><tr>'
-    +'<th>Hole</th><th>Par</th><th>SI</th><th>'+S.tee+'</th>';
+  var h='<div class="twrap"><table class="sotbl"><thead><tr>'
+    +'<th class="thl">Hole</th><th>Par</th><th>SI</th><th>'+esc(S.tee)+'</th>';
   players.forEach(function(p){h+='<th>'+esc(p.n)+'</th>';});
   h+='</tr></thead><tbody>';
   for(var i=0;i<S.holes;i++){
     var hd=S.hd[i]||{par:4,si:i+1,yards:{}};
-    h+='<tr><td>H'+(i+1)+'</td><td>'+hd.par+'</td><td>'+hd.si+'</td><td>'+(hd.yards[S.tee]||'—')+'y</td>';
+    h+='<tr><td class="tdl">H'+(i+1)+'</td><td>'+hd.par+'</td><td>'+hd.si+'</td><td>'+(hd.yards[S.tee]||'—')+'y</td>';
     players.forEach(function(_,pi){
-      var s=(S.scores[i]&&S.scores[i][pi])||0;
-      if(!s){h+='<td>—</td>';return;}
-      var d=s-hd.par; var cls=d<=-2?'sea':d===-1?'sbi':d===0?'spa':d===1?'sbo':'sdb';
-      h+='<td><span class="sc '+cls+'">'+s+'</span></td>';
+      var sc=(S.scores[i]&&S.scores[i][pi])||0;
+      if(!sc){h+='<td>—</td>';return;}
+      var d=sc-hd.par;
+      var cls=d<=-2?'sea':d===-1?'sbi':d===0?'spa':d===1?'sbo':'sdb';
+      h+='<td><span class="sc '+cls+'">'+sc+'</span></td>';
     });
     h+='</tr>';
   }
   var tp=0; S.hd.slice(0,S.holes).forEach(function(x){tp+=x.par;});
-  h+='<tr><td>Total</td><td>'+tp+'</td><td>—</td><td>—</td>';
-  players.forEach(function(_,pi){var t=pTot(pi);h+='<td>'+t.g+' <small style="color:#888">('+fvs(t.vs)+')</small></td>';});
+  h+='<tr class="totr"><td class="tdl">Total</td><td>'+tp+'</td><td>—</td><td>—</td>';
+  players.forEach(function(_,pi){
+    var t=pTot(pi);
+    h+='<td>'+t.g+' ('+fvs(t.vs)+')</td>';
+  });
   h+='</tr></tbody></table></div>';
   tw.innerHTML=h; wrap.appendChild(tw);
 
+  // Stats
   var stats=document.createElement('div'); stats.className='card';
   stats.innerHTML='<div class="ct">📈 Stats</div>';
   players.forEach(function(p,pi){
     var ea=0,bi=0,pa=0,bo=0,db=0,wr=0;
     for(var i=0;i<S.holes;i++){
-      var s=(S.scores[i]&&S.scores[i][pi])||0; if(!s)continue;
-      var d=s-(S.hd[i]?S.hd[i].par:4);
+      var sc=(S.scores[i]&&S.scores[i][pi])||0; if(!sc)continue;
+      var d=sc-(S.hd[i]?S.hd[i].par:4);
       if(d<=-2)ea++;else if(d===-1)bi++;else if(d===0)pa++;else if(d===1)bo++;else if(d===2)db++;else wr++;
     }
-    var b='';
-    if(ea)b+='<span style="background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:12px;font-weight:600;font-size:12px;margin:2px">🦅 '+ea+'</span>';
-    if(bi)b+='<span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:12px;font-weight:600;font-size:12px;margin:2px">🐦 '+bi+'</span>';
-    if(pa)b+='<span style="background:#e8f5ee;color:#1a6b3c;padding:2px 8px;border-radius:12px;font-weight:600;font-size:12px;margin:2px">✅ '+pa+'</span>';
-    if(bo)b+='<span style="background:#f0f0f0;color:#555;padding:2px 8px;border-radius:12px;font-weight:600;font-size:12px;margin:2px">+1 '+bo+'</span>';
-    if(db)b+='<span style="background:#374151;color:#fff;padding:2px 8px;border-radius:12px;font-weight:600;font-size:12px;margin:2px">+2 '+db+'</span>';
-    if(wr)b+='<span style="background:#111;color:#fff;padding:2px 8px;border-radius:12px;font-weight:600;font-size:12px;margin:2px">💀 '+wr+'</span>';
-    stats.innerHTML+='<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f0f0f0">'
-      +'<div style="font-weight:700;font-size:13px;margin-bottom:5px;color:'+PCLR[pi]+'">'+esc(p.n)+'</div>'
-      +'<div style="display:flex;gap:4px;flex-wrap:wrap">'+b+'</div></div>';
+    var row=document.createElement('div'); row.className='statrow';
+    row.innerHTML='<div class="statname '+PCLR[pi]+'">'+esc(p.n)+'</div><div class="statbadges">'
+      +(ea?'<span class="statbadge sb-ea">🦅 '+ea+'</span>':'')
+      +(bi?'<span class="statbadge sb-bi">🐦 '+bi+'</span>':'')
+      +(pa?'<span class="statbadge sb-pa">✅ '+pa+'</span>':'')
+      +(bo?'<span class="statbadge sb-bo">+1 '+bo+'</span>':'')
+      +(db?'<span class="statbadge sb-db">+2 '+db+'</span>':'')
+      +(wr?'<span class="statbadge sb-wr">💀 '+wr+'</span>':'')
+      +'</div>';
+    stats.appendChild(row);
   });
   wrap.appendChild(stats);
 }
 
-// ════ MODAL ════
-function initModal(){
-  document.getElementById('btnNew').addEventListener('click',function(){ document.getElementById('mOv').classList.add('on'); });
-  document.getElementById('mCancel').addEventListener('click',function(){ document.getElementById('mOv').classList.remove('on'); });
-  document.getElementById('mConfirm').addEventListener('click',function(){
-    S.scores=[]; for(var h=0;h<S.holes;h++) S.scores.push([0,0,0,0,0]);
-    S.cur=0; save(); document.getElementById('mOv').classList.remove('on');
+/* ═══════════════════════════════════════
+   BOOT — wire up all events here
+═══════════════════════════════════════ */
+window.addEventListener('load',function(){
+  // Header date
+  $('hdrDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+
+  // Build player grid
+  buildPlayerGrid();
+
+  // Tabs
+  $('tabs').addEventListener('click',function(e){
+    var b=e.target.closest('.tab'); if(!b)return;
+    switchTab(b.dataset.v);
+  });
+
+  // Tee bar
+  $('teebar').addEventListener('click',function(e){
+    var b=e.target.closest('.tb'); if(!b)return;
+    S.tee=b.dataset.tee;
+    document.querySelectorAll('.tb').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on');
+    save();
+  });
+
+  // Holes selector
+  $('numHoles').addEventListener('change',function(){
+    S.holes=parseInt(this.value);
+    if(S.hd.length!==S.holes) S.hd=makeHoles(S.holes);
+    save();
+  });
+
+  // Start round
+  $('startBtn').addEventListener('click',function(){
+    S.holes=parseInt($('numHoles').value);
+    for(var i=0;i<5;i++){
+      S.players[i].n=($('pn'+i)?$('pn'+i).value.trim():'');
+      S.players[i].h=($('ph'+i)?parseInt($('ph'+i).value)||0:0);
+    }
+    if(!S.players.filter(function(p){return p.n;}).length) S.players[0].n='Player 1';
+    if(!S.course) S.course='Golf Course';
+    S.scores=[];
+    for(var h=0;h<S.holes;h++) S.scores.push([0,0,0,0,0]);
+    S.cur=0; S.started=true;
+    $('hdrCourse').textContent=S.course;
+    save(); buildDots(); renderHole(0); switchTab('play');
+  });
+
+  // Search
+  $('sBtn').addEventListener('click',doSearch);
+  $('sInput').addEventListener('keydown',function(e){ if(e.key==='Enter')doSearch(); });
+
+  // View card btn
+  $('viewCardBtn').addEventListener('click',function(){ switchTab('info'); });
+
+  // Reset course data
+  $('resetDataBtn').addEventListener('click',function(){ S.hd=makeHoles(S.holes); buildTable(); save(); });
+
+  // Next hole
+  $('nextBtn').addEventListener('click',function(){
+    if(S.cur<S.holes-1){ S.cur++; save(); buildDots(); renderHole(S.cur); }
+    else{ save(); switchTab('totals'); }
+  });
+
+  // Modal
+  $('btnNew').addEventListener('click',function(){ $('mOv').classList.add('on'); });
+  $('mCancel').addEventListener('click',function(){ $('mOv').classList.remove('on'); });
+  $('mConfirm').addEventListener('click',function(){
+    S.scores=[];
+    for(var h=0;h<S.holes;h++) S.scores.push([0,0,0,0,0]);
+    S.cur=0; save(); $('mOv').classList.remove('on');
     if(S.started){ buildDots(); renderHole(0); switchTab('play'); }
   });
-}
 
-// ════ BOOT ════
-window.addEventListener('load',function(){
-  document.getElementById('hdrDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-  buildPlayerGrid();
-  document.getElementById('tabs').addEventListener('click',function(e){
-    var b=e.target.closest('.tab'); if(!b)return; switchTab(b.dataset.tab);
-  });
-  initTeebar(); initApiKey(); initSearch(); initSetup(); initPlay(); initModal();
+  // Load saved state
   load();
   buildTable();
 });
